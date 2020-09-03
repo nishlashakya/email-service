@@ -16,7 +16,8 @@ interface IEmailFields {
 	message: '';
 }
 
-const handleSend = (fields: IEmailFields) => async() => {
+const handleSend = (fields: IEmailFields) => async(e:any) => {
+	e.preventDefault()
 	await sendEmail(fields)
 }
 
