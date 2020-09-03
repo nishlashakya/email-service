@@ -1,29 +1,11 @@
-import React, {useState} from 'react';
-import { createStyles, Theme } from '@material-ui/core/styles';
+import React from 'react';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField'
 import {withStyles} from '@material-ui/core/styles';
 import {sendEmail} from '../actions/formActions'
-
-const styles = (theme: Theme) =>
-	createStyles({
-		root: {
-			flexGrow: 1,
-		},
-		paper: {
-			padding: theme.spacing(2),
-			textAlign: 'center',
-			color: theme.palette.text.secondary,
-			marginTop: '15%',
-			width: '300px'
-		},
-		row: {
-			padding: theme.spacing(1),
-		}
-	})
-
+import TextField from '@material-ui/core/TextField';
+import {styles} from './styles/formStyle'
 interface IFormProps {
 	classes: any;
 }
@@ -33,28 +15,19 @@ interface IEmailFields {
 	to: '';
 	message: '';
 }
-interface IErrorFields {
-	subject: boolean;
-	to: boolean;
-	message: boolean;
-}
 
-const handleSend = async(fields: IEmailFields) => {
+const handleSend = (fields: IEmailFields) => async() => {
 	await sendEmail(fields)
 }
+
+const handleChange = (updater:any) => (event:any) => updater(event.target.value);
 
 const FormComponent: React.FC<IFormProps> = (props) => {
 	const [subject, updateSubject] = React.useState();
 	const [to, updateTo] = React.useState();
 	const [message, updateMessage] = React.useState();
-	const [error, setError] = React.useState({
-		subject: false,
-		to: false,
-		message: false
-	})
 	const classes = props.classes
 
-	const handleChange = (updater:any) => (event:any) => updater(event.target.value);
 	return (
 		<div className={classes.root}>
 			<Grid
@@ -64,47 +37,49 @@ const FormComponent: React.FC<IFormProps> = (props) => {
 				alignItems="center"
 			>
 				<Paper elevation={3} className={classes.paper}>
-					<form className={classes.root}>
+					<form onSubmit={handleSend({subject, to, message})}>
 						<div className={classes.row}>
 							<TextField
-								id="email-subject"
+								className={classes.formField}
 								label="Subject:"
+								name='subject'
 								variant="outlined"
-								value={subject}
 								onChange={handleChange(updateSubject)}
+								value={subject}
 								required
-								error={error.subject}
 							/>
 						</div>
 						<div className={classes.row}>
 							<TextField
-								id="email-to"
+								className={classes.formField}
 								label="To:"
-								type="email"
+								name='to'
 								variant="outlined"
+								onChange={handleChange(updateTo)}
 								value={to}
-								onChange={(e) => updateTo(e.target.value)}
 								required
-								error={error.to}
+								type="email"
 							/>
 						</div>
 						<div className={classes.row}>
 							<TextField
-								id="outlined-multiline-static"
+								className={classes.formField}
 								label="Message:"
+								name='message'
+								variant="outlined"
+								onChange={handleChange(updateMessage)}
+								value={message}
+								required
 								multiline
 								rows={4}
-								variant="outlined"
-								value={message}
-								onChange={(e) => updateMessage(e.target.value)}
-								error={error.message}
 							/>
 						</div>
 						<Button
 							variant="contained"
 							color="primary"
+							type="submit"
 							className={classes.button}
-							onClick={() => handleSend({subject, to, message})}
+							data-testid="form-action-button"
 						>
 							Send
 						</Button>

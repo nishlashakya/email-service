@@ -4,20 +4,19 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import {withStyles} from '@material-ui/core/styles';
 
-
 interface THeaderProps {
-    classes: any;
+	classes: any;
 }
 
 const AppHeader: React.FC<THeaderProps> = (props) => {
   return (
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" className={props.classes.title}>
-            Email sender
-          </Typography>
-        </Toolbar>
-      </AppBar>
+	  <AppBar position="static">
+		<Toolbar>
+		  <Typography variant="h6" className={props.classes.title} data-testid='app-header-title'>
+			Email sender
+		  </Typography>
+		</Toolbar>
+	  </AppBar>
   );
 }
 
